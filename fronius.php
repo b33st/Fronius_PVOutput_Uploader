@@ -12,7 +12,8 @@ $inverterDataURL = "http://".$dataManagerIP."/solar_api/v1/GetInverterRealtimeDa
 $meterDataURL = "http://".$dataManagerIP."/solar_api/v1/GetMeterRealtimeData.cgi?Scope=Device&DeviceId=0";
 
 // Define Date & Time
-$system_time = mktime();
+date_default_timezone_set("Australia/Brisbane");
+$system_time= time();
 $date = date('Ymd', time());
 $time = date('H:i', time());
 
