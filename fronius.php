@@ -1,5 +1,7 @@
 <?php
 
+start:
+
 // Configuration Options
 $dataManagerIP = "";
 $dataFile = "";
@@ -18,18 +20,24 @@ $date = date('Ymd', time());
 $time = date('H:i', time());
 
 // Read Meter Data
-$meterJSON = file_get_contents($meterDataURL);
-$meterData = json_decode($meterJSON, true);
-$meterPowerLive = $meterData["Body"]["Data"]["PowerReal_P_Sum"];
-$meterImportTotal = $meterData["Body"]["Data"]["EnergyReal_WAC_Plus_Absolute"];
-$meterExportTotal = $meterData["Body"]["Data"]["EnergyReal_WAC_Minus_Absolute"];;
+do {
+    sleep(5);
+    $meterJSON = file_get_contents($meterDataURL);
+    $meterData = json_decode($meterJSON, true);
+    $meterPowerLive = $meterData["Body"]["Data"]["PowerReal_P_Sum"];
+    $meterImportTotal = $meterData["Body"]["Data"]["EnergyReal_WAC_Plus_Absolute"];
+    $meterExportTotal = $meterData["Body"]["Data"]["EnergyReal_WAC_Minus_Absolute"];
+} while (empty($meterPowerLive) || empty($meterImportTotal) || empty($meterExportTotal));
 
 // Read Inverter Data
-$inverterJSON = file_get_contents($inverterDataURL);
-$inverterData = json_decode($inverterJSON, true);
-$inverterPowerLive = $inverterData["Body"]["Data"]["PAC"]["Value"];
-$inverterEnergyDayTotal = $inverterData["Body"]["Data"]["DAY_ENERGY"]["Value"];
-$inverterVoltageLive = $inverterData["Body"]["Data"]["UAC"]["Value"];;
+do {
+    sleep(5);
+    $inverterJSON = file_get_contents($inverterDataURL);
+    $inverterData = json_decode($inverterJSON, true);
+    $inverterPowerLive = $inverterData["Body"]["Data"]["PAC"]["Value"];
+    $inverterEnergyDayTotal = $inverterData["Body"]["Data"]["DAY_ENERGY"]["Value"];
+    $inverterVoltageLive = $inverterData["Body"]["Data"]["UAC"]["Value"];
+} while (empty($inverterEnergyDayTotal));
 
 // Read Previous Days Meter Totals From Data File
 if (file_exists($dataFile)) {
